@@ -9814,3 +9814,20 @@ a.button {
   opacity: 0;
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
+
+/* Empty. Add your own CSS if you like */
+canvas {
+  margin: 0; }
+
+.screen-background {
+  background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75)), url("../img/bubbles-vector.png") no-repeat center; }
+
+.v-center {
+  display: flex;
+  flex-direction: column;
+  flex-flow: column;
+  justify-content: center; }
+
+.bottom {
+  display: fixed;
+  bottom: 0; }

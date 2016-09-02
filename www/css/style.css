@@ -1,17 +1,1 @@
 /* Empty. Add your own CSS if you like */
-
-canvas {
-	margin: 0;
-}
-.screen-background {
-	background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(0, 0, 0, 0.95)), url('../img/bubbles-vector.png') no-repeat center;
-}
-.logo-background {
-	background: url('../img/bubble.png') no-repeat center/50%;
-}
-.v-center {
-	display: flex;
-	flex-direction: column;
-	flex-flow: column;
-	justify-content: center;
-}
