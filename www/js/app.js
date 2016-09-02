@@ -1,3 +1,5 @@
+(function(){
+
 angular
 	.module('game', ['ionic', 'game.controllers']);
 
@@ -49,3 +51,5 @@ angular
 			}
 		});
 	});
+
+}());

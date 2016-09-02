@@ -1,3 +1,5 @@
+(function(){
+
 angular
 	.module('game.controllers', ['ionic', 'chart.js']);
 
@@ -168,3 +170,5 @@ angular
 			return Math.abs(randomScalingFactor()) / 3;
 		}
 	}]);
+
+}());
