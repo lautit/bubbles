@@ -57,7 +57,9 @@ angular
 	.module('starter')
 	.controller('BubbleCtrl', ['$scope', '$interval', function ($scope, $interval) {
 		'use strict';
-		
+
+		Chart.defaults.global.elements.point.hoverRadius = 0;
+
 		$scope.options = {
 			resposive: true,
 			maintainAspectRatio: false,
@@ -65,69 +67,88 @@ angular
 				xAxes: [{
 					display: false,
 					ticks: {
-						max: 125,
-						min: -125,
-						stepSize: 10
+						max: 150,
+						min: -150,
+						stepSize: 1
 					}
 				}],
 				yAxes: [{
 					display: false,
 					ticks: {
-						max: 125,
-						min: -125,
-						stepSize: 10
+						max: 150,
+						min: -150,
+						stepSize: 1
 					}
-        		}]
+				}]
 			}
 		};
 
 		createChart();
 		$interval(createChart, 1000);
 
-		$scope.whoClicked = function (points, evt) {
-			//console.log(points, evt);			
-			var theOne = $scope.theOne[0];
-			
-			var offsetH = (evt.srcElement.clientHeight) / 2;
-			var offsetW = (evt.srcElement.clientWidth) / 2;
-			
-			var hitboxX = theOne.x + offsetW;
-			var hitboxY = theOne.y + offsetH;
-		
-			var hitboxMinX = hitboxX - theOne.r;
-			var hitboxMaxX = hitboxX + theOne.r;
-			
-			var hitboxMinY = hitboxY - theOne.r;
-			var hitboxMaxY = hitboxY + theOne.r;
-			
-			var clickX = evt.x;
-			var clickY = evt.y;
-			
-			var validX = (clickX > hitboxMinX) && (clickX < hitboxMaxX);
-			var validY = (clickY > hitboxMinY) && (clickY < hitboxMaxY);
-			
+		$scope.whoClicked = function (points, event) {
+
+			var theOne = [{
+				x: 0,
+				y: 0,
+				r: 0
+			}];
+
+			for (var i = 0; i < points.length; i++) {
+				// Get current Dataset
+				var dataset = points[i]._datasetIndex;
+				// Get current serie by dataset index
+				var serie = $scope.series[dataset];
+
+				if (serie == 'The One') {
+					theOne.x = points[i]._model.x;
+					theOne.y = points[i]._model.y;
+					theOne.r = points[i]._model.radius;
+				}
+			}
+
+			var hitboxX = theOne.x || 0;
+			var hitboxY = theOne.y || 0;
+			var hitboxR = theOne.r || 0;
+
+			var hitboxMinX = hitboxX - hitboxR - 1;
+			var hitboxMaxX = hitboxX + hitboxR + 1;
+
+			var hitboxMinY = hitboxY - hitboxR - 1;
+			var hitboxMaxY = hitboxY + hitboxR + 1;
+
+			var clickX = event.offsetX;
+			var clickY = event.offsetY;
+
+			var validX = (clickX >= hitboxMinX) && (clickX <= hitboxMaxX);
+			var validY = (clickY >= hitboxMinY) && (clickY <= hitboxMaxY);
+
 			var valid = validX && validY;
 			var state = valid ? "YOU FUCKING WIN" : "you loooooser";
-			
-			console.log("TheOne: (x,y,r) = (" + theOne.x + "," + theOne.y + "," + theOne.r + ")");
-			console.log("Valid: ([m<x<M],[m<y<M]) = ([" + hitboxMinX + "<x<" + hitboxMaxX + "],[" + hitboxMinY + "<y<" + hitboxMaxY + "])");
-			console.log("Click: (x,y) = (" + clickX + "," + clickY + ")");
-			console.log(state);
+
+
+			//console.log("Valid: x = " + validX + " and y = " + validY);
+			//console.log("TheOne: (x,y,r) = (" + theOne.x + "," + theOne.y + "," + theOne.r + ")");
+			//console.log("Valid: ([m < x < M] , [m < y < M]) = ([" + hitboxMinX + " < x < " + hitboxMaxX + "] , [" + hitboxMinY + " < y < " + hitboxMaxY + "])");
+			//console.log("Click: (x,y) = (" + clickX + "," + clickY + ")");
+			alert(state);
 		};
 
 		function createChart() {
+			var howMany = 10;
 			$scope.series = [];
 			$scope.data = [];
-			for (var i = 0; i < 20; i++) {
-				$scope.series.push(`Series ${i}`);
+
+			injectTheOne($scope.series, $scope.data);
+
+			$scope.series.push(`Others`);
+
+			for (var i = 0; i < howMany; i++)
 				$scope.data.push([{
 					x: randomScalingFactor(),
 					y: randomScalingFactor(),
 					r: randomRadius()
-        		}]);
-			}
-
-			injectTheOne($scope.series, $scope.data);
+				}]);
 		}
 
 		function createTheOne() {

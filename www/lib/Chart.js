@@ -34,59 +34,59 @@ module.exports = {
 
 function getRgba(string) {
    if (!string) {
-      return;
+	  return;
    }
    var abbr =  /^#([a-fA-F0-9]{3})$/,
-       hex =  /^#([a-fA-F0-9]{6})$/,
-       rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/,
-       per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/,
-       keyword = /(\w+)/;
+	   hex =  /^#([a-fA-F0-9]{6})$/,
+	   rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/,
+	   per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/,
+	   keyword = /(\w+)/;
 
    var rgb = [0, 0, 0],
-       a = 1,
-       match = string.match(abbr);
+	   a = 1,
+	   match = string.match(abbr);
    if (match) {
-      match = match[1];
-      for (var i = 0; i < rgb.length; i++) {
-         rgb[i] = parseInt(match[i] + match[i], 16);
-      }
+	  match = match[1];
+	  for (var i = 0; i < rgb.length; i++) {
+		 rgb[i] = parseInt(match[i] + match[i], 16);
+	  }
    }
    else if (match = string.match(hex)) {
-      match = match[1];
-      for (var i = 0; i < rgb.length; i++) {
-         rgb[i] = parseInt(match.slice(i * 2, i * 2 + 2), 16);
-      }
+	  match = match[1];
+	  for (var i = 0; i < rgb.length; i++) {
+		 rgb[i] = parseInt(match.slice(i * 2, i * 2 + 2), 16);
+	  }
    }
    else if (match = string.match(rgba)) {
-      for (var i = 0; i < rgb.length; i++) {
-         rgb[i] = parseInt(match[i + 1]);
-      }
-      a = parseFloat(match[4]);
+	  for (var i = 0; i < rgb.length; i++) {
+		 rgb[i] = parseInt(match[i + 1]);
+	  }
+	  a = parseFloat(match[4]);
    }
    else if (match = string.match(per)) {
-      for (var i = 0; i < rgb.length; i++) {
-         rgb[i] = Math.round(parseFloat(match[i + 1]) * 2.55);
-      }
-      a = parseFloat(match[4]);
+	  for (var i = 0; i < rgb.length; i++) {
+		 rgb[i] = Math.round(parseFloat(match[i + 1]) * 2.55);
+	  }
+	  a = parseFloat(match[4]);
    }
    else if (match = string.match(keyword)) {
-      if (match[1] == "transparent") {
-         return [0, 0, 0, 0];
-      }
-      rgb = colorNames[match[1]];
-      if (!rgb) {
-         return;
-      }
+	  if (match[1] == "transparent") {
+		 return [0, 0, 0, 0];
+	  }
+	  rgb = colorNames[match[1]];
+	  if (!rgb) {
+		 return;
+	  }
    }
 
    for (var i = 0; i < rgb.length; i++) {
-      rgb[i] = scale(rgb[i], 0, 255);
+	  rgb[i] = scale(rgb[i], 0, 255);
    }
    if (!a && a != 0) {
-      a = 1;
+	  a = 1;
    }
    else {
-      a = scale(a, 0, 1);
+	  a = scale(a, 0, 1);
    }
    rgb[3] = a;
    return rgb;
@@ -94,33 +94,33 @@ function getRgba(string) {
 
 function getHsla(string) {
    if (!string) {
-      return;
+	  return;
    }
    var hsl = /^hsla?\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/;
    var match = string.match(hsl);
    if (match) {
-      var alpha = parseFloat(match[4]);
-      var h = scale(parseInt(match[1]), 0, 360),
-          s = scale(parseFloat(match[2]), 0, 100),
-          l = scale(parseFloat(match[3]), 0, 100),
-          a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
-      return [h, s, l, a];
+	  var alpha = parseFloat(match[4]);
+	  var h = scale(parseInt(match[1]), 0, 360),
+		  s = scale(parseFloat(match[2]), 0, 100),
+		  l = scale(parseFloat(match[3]), 0, 100),
+		  a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
+	  return [h, s, l, a];
    }
 }
 
 function getHwb(string) {
    if (!string) {
-      return;
+	  return;
    }
    var hwb = /^hwb\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/;
    var match = string.match(hwb);
    if (match) {
-    var alpha = parseFloat(match[4]);
-      var h = scale(parseInt(match[1]), 0, 360),
-          w = scale(parseFloat(match[2]), 0, 100),
-          b = scale(parseFloat(match[3]), 0, 100),
-          a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
-      return [h, w, b, a];
+	var alpha = parseFloat(match[4]);
+	  var h = scale(parseInt(match[1]), 0, 360),
+		  w = scale(parseFloat(match[2]), 0, 100),
+		  b = scale(parseFloat(match[3]), 0, 100),
+		  a = scale(isNaN(alpha) ? 1 : alpha, 0, 1);
+	  return [h, w, b, a];
    }
 }
 
@@ -137,78 +137,78 @@ function getHsl(string) {
 function getAlpha(string) {
    var vals = getRgba(string);
    if (vals) {
-      return vals[3];
+	  return vals[3];
    }
    else if (vals = getHsla(string)) {
-      return vals[3];
+	  return vals[3];
    }
    else if (vals = getHwb(string)) {
-      return vals[3];
+	  return vals[3];
    }
 }
 
 // generators
 function hexString(rgb) {
    return "#" + hexDouble(rgb[0]) + hexDouble(rgb[1])
-              + hexDouble(rgb[2]);
+			  + hexDouble(rgb[2]);
 }
 
 function rgbString(rgba, alpha) {
    if (alpha < 1 || (rgba[3] && rgba[3] < 1)) {
-      return rgbaString(rgba, alpha);
+	  return rgbaString(rgba, alpha);
    }
    return "rgb(" + rgba[0] + ", " + rgba[1] + ", " + rgba[2] + ")";
 }
 
 function rgbaString(rgba, alpha) {
    if (alpha === undefined) {
-      alpha = (rgba[3] !== undefined ? rgba[3] : 1);
+	  alpha = (rgba[3] !== undefined ? rgba[3] : 1);
    }
    return "rgba(" + rgba[0] + ", " + rgba[1] + ", " + rgba[2]
-           + ", " + alpha + ")";
+		   + ", " + alpha + ")";
 }
 
 function percentString(rgba, alpha) {
    if (alpha < 1 || (rgba[3] && rgba[3] < 1)) {
-      return percentaString(rgba, alpha);
+	  return percentaString(rgba, alpha);
    }
    var r = Math.round(rgba[0]/255 * 100),
-       g = Math.round(rgba[1]/255 * 100),
-       b = Math.round(rgba[2]/255 * 100);
+	   g = Math.round(rgba[1]/255 * 100),
+	   b = Math.round(rgba[2]/255 * 100);
 
    return "rgb(" + r + "%, " + g + "%, " + b + "%)";
 }
 
 function percentaString(rgba, alpha) {
    var r = Math.round(rgba[0]/255 * 100),
-       g = Math.round(rgba[1]/255 * 100),
-       b = Math.round(rgba[2]/255 * 100);
+	   g = Math.round(rgba[1]/255 * 100),
+	   b = Math.round(rgba[2]/255 * 100);
    return "rgba(" + r + "%, " + g + "%, " + b + "%, " + (alpha || rgba[3] || 1) + ")";
 }
 
 function hslString(hsla, alpha) {
    if (alpha < 1 || (hsla[3] && hsla[3] < 1)) {
-      return hslaString(hsla, alpha);
+	  return hslaString(hsla, alpha);
    }
    return "hsl(" + hsla[0] + ", " + hsla[1] + "%, " + hsla[2] + "%)";
 }
 
 function hslaString(hsla, alpha) {
    if (alpha === undefined) {
-      alpha = (hsla[3] !== undefined ? hsla[3] : 1);
+	  alpha = (hsla[3] !== undefined ? hsla[3] : 1);
    }
    return "hsla(" + hsla[0] + ", " + hsla[1] + "%, " + hsla[2] + "%, "
-           + alpha + ")";
+		   + alpha + ")";
 }
 
 // hwb is a bit different than rgb(a) & hsl(a) since there is no alpha specific syntax
 // (hwb have alpha optional & 1 is default value)
 function hwbString(hwb, alpha) {
    if (alpha === undefined) {
-      alpha = (hwb[3] !== undefined ? hwb[3] : 1);
+	  alpha = (hwb[3] !== undefined ? hwb[3] : 1);
    }
    return "hwb(" + hwb[0] + ", " + hwb[1] + "%, " + hwb[2] + "%"
-           + (alpha !== undefined && alpha !== 1 ? ", " + alpha : "") + ")";
+		   + (alpha !== undefined && alpha !== 1 ? ", " + alpha : "") + ")";
 }
 
 function keyword(rgb) {
@@ -778,66 +778,66 @@ module.exports = {
 
 function rgb2hsl(rgb) {
   var r = rgb[0]/255,
-      g = rgb[1]/255,
-      b = rgb[2]/255,
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, l;
+	  g = rgb[1]/255,
+	  b = rgb[2]/255,
+	  min = Math.min(r, g, b),
+	  max = Math.max(r, g, b),
+	  delta = max - min,
+	  h, s, l;
 
   if (max == min)
-    h = 0;
+	h = 0;
   else if (r == max)
-    h = (g - b) / delta;
+	h = (g - b) / delta;
   else if (g == max)
-    h = 2 + (b - r) / delta;
+	h = 2 + (b - r) / delta;
   else if (b == max)
-    h = 4 + (r - g)/ delta;
+	h = 4 + (r - g)/ delta;
 
   h = Math.min(h * 60, 360);
 
   if (h < 0)
-    h += 360;
+	h += 360;
 
   l = (min + max) / 2;
 
   if (max == min)
-    s = 0;
+	s = 0;
   else if (l <= 0.5)
-    s = delta / (max + min);
+	s = delta / (max + min);
   else
-    s = delta / (2 - max - min);
+	s = delta / (2 - max - min);
 
   return [h, s * 100, l * 100];
 }
 
 function rgb2hsv(rgb) {
   var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, v;
+	  g = rgb[1],
+	  b = rgb[2],
+	  min = Math.min(r, g, b),
+	  max = Math.max(r, g, b),
+	  delta = max - min,
+	  h, s, v;
 
   if (max == 0)
-    s = 0;
+	s = 0;
   else
-    s = (delta/max * 1000)/10;
+	s = (delta/max * 1000)/10;
 
   if (max == min)
-    h = 0;
+	h = 0;
   else if (r == max)
-    h = (g - b) / delta;
+	h = (g - b) / delta;
   else if (g == max)
-    h = 2 + (b - r) / delta;
+	h = 2 + (b - r) / delta;
   else if (b == max)
-    h = 4 + (r - g) / delta;
+	h = 4 + (r - g) / delta;
 
   h = Math.min(h * 60, 360);
 
   if (h < 0)
-    h += 360;
+	h += 360;
 
   v = ((max / 255) * 1000) / 10;
 
@@ -846,20 +846,20 @@ function rgb2hsv(rgb) {
 
 function rgb2hwb(rgb) {
   var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      h = rgb2hsl(rgb)[0],
-      w = 1/255 * Math.min(r, Math.min(g, b)),
-      b = 1 - 1/255 * Math.max(r, Math.max(g, b));
+	  g = rgb[1],
+	  b = rgb[2],
+	  h = rgb2hsl(rgb)[0],
+	  w = 1/255 * Math.min(r, Math.min(g, b)),
+	  b = 1 - 1/255 * Math.max(r, Math.max(g, b));
 
   return [h, w * 100, b * 100];
 }
 
 function rgb2cmyk(rgb) {
   var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255,
-      c, m, y, k;
+	  g = rgb[1] / 255,
+	  b = rgb[2] / 255,
+	  c, m, y, k;
 
   k = Math.min(1 - r, 1 - g, 1 - b);
   c = (1 - r - k) / (1 - k) || 0;
@@ -874,8 +874,8 @@ function rgb2keyword(rgb) {
 
 function rgb2xyz(rgb) {
   var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255;
+	  g = rgb[1] / 255,
+	  b = rgb[2] / 255;
 
   // assume sRGB
   r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
@@ -891,10 +891,10 @@ function rgb2xyz(rgb) {
 
 function rgb2lab(rgb) {
   var xyz = rgb2xyz(rgb),
-        x = xyz[0],
-        y = xyz[1],
-        z = xyz[2],
-        l, a, b;
+		x = xyz[0],
+		y = xyz[1],
+		z = xyz[2],
+		l, a, b;
 
   x /= 95.047;
   y /= 100;
@@ -917,37 +917,37 @@ function rgb2lch(args) {
 
 function hsl2rgb(hsl) {
   var h = hsl[0] / 360,
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      t1, t2, t3, rgb, val;
+	  s = hsl[1] / 100,
+	  l = hsl[2] / 100,
+	  t1, t2, t3, rgb, val;
 
   if (s == 0) {
-    val = l * 255;
-    return [val, val, val];
+	val = l * 255;
+	return [val, val, val];
   }
 
   if (l < 0.5)
-    t2 = l * (1 + s);
+	t2 = l * (1 + s);
   else
-    t2 = l + s - l * s;
+	t2 = l + s - l * s;
   t1 = 2 * l - t2;
 
   rgb = [0, 0, 0];
   for (var i = 0; i < 3; i++) {
-    t3 = h + 1 / 3 * - (i - 1);
-    t3 < 0 && t3++;
-    t3 > 1 && t3--;
+	t3 = h + 1 / 3 * - (i - 1);
+	t3 < 0 && t3++;
+	t3 > 1 && t3--;
 
-    if (6 * t3 < 1)
-      val = t1 + (t2 - t1) * 6 * t3;
-    else if (2 * t3 < 1)
-      val = t2;
-    else if (3 * t3 < 2)
-      val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-    else
-      val = t1;
+	if (6 * t3 < 1)
+	  val = t1 + (t2 - t1) * 6 * t3;
+	else if (2 * t3 < 1)
+	  val = t2;
+	else if (3 * t3 < 2)
+	  val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+	else
+	  val = t1;
 
-    rgb[i] = val * 255;
+	rgb[i] = val * 255;
   }
 
   return rgb;
@@ -955,14 +955,14 @@ function hsl2rgb(hsl) {
 
 function hsl2hsv(hsl) {
   var h = hsl[0],
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      sv, v;
+	  s = hsl[1] / 100,
+	  l = hsl[2] / 100,
+	  sv, v;
 
   if(l === 0) {
-      // no need to do calc on black
-      // also avoids divide by 0 error
-      return [0, 0, 0];
+	  // no need to do calc on black
+	  // also avoids divide by 0 error
+	  return [0, 0, 0];
   }
 
   l *= 2;
@@ -987,37 +987,37 @@ function hsl2keyword(args) {
 
 function hsv2rgb(hsv) {
   var h = hsv[0] / 60,
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      hi = Math.floor(h) % 6;
+	  s = hsv[1] / 100,
+	  v = hsv[2] / 100,
+	  hi = Math.floor(h) % 6;
 
   var f = h - Math.floor(h),
-      p = 255 * v * (1 - s),
-      q = 255 * v * (1 - (s * f)),
-      t = 255 * v * (1 - (s * (1 - f))),
-      v = 255 * v;
+	  p = 255 * v * (1 - s),
+	  q = 255 * v * (1 - (s * f)),
+	  t = 255 * v * (1 - (s * (1 - f))),
+	  v = 255 * v;
 
   switch(hi) {
-    case 0:
-      return [v, t, p];
-    case 1:
-      return [q, v, p];
-    case 2:
-      return [p, v, t];
-    case 3:
-      return [p, q, v];
-    case 4:
-      return [t, p, v];
-    case 5:
-      return [v, p, q];
+	case 0:
+	  return [v, t, p];
+	case 1:
+	  return [q, v, p];
+	case 2:
+	  return [p, v, t];
+	case 3:
+	  return [p, q, v];
+	case 4:
+	  return [t, p, v];
+	case 5:
+	  return [v, p, q];
   }
 }
 
 function hsv2hsl(hsv) {
   var h = hsv[0],
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      sl, l;
+	  s = hsv[1] / 100,
+	  v = hsv[2] / 100,
+	  sl, l;
 
   l = (2 - s) * v;
   sl = s * v;
@@ -1042,34 +1042,34 @@ function hsv2keyword(args) {
 // http://dev.w3.org/csswg/css-color/#hwb-to-rgb
 function hwb2rgb(hwb) {
   var h = hwb[0] / 360,
-      wh = hwb[1] / 100,
-      bl = hwb[2] / 100,
-      ratio = wh + bl,
-      i, v, f, n;
+	  wh = hwb[1] / 100,
+	  bl = hwb[2] / 100,
+	  ratio = wh + bl,
+	  i, v, f, n;
 
   // wh + bl cant be > 1
   if (ratio > 1) {
-    wh /= ratio;
-    bl /= ratio;
+	wh /= ratio;
+	bl /= ratio;
   }
 
   i = Math.floor(6 * h);
   v = 1 - bl;
   f = 6 * h - i;
   if ((i & 0x01) != 0) {
-    f = 1 - f;
+	f = 1 - f;
   }
   n = wh + f * (v - wh);  // linear interpolation
 
   switch (i) {
-    default:
-    case 6:
-    case 0: r = v; g = n; b = wh; break;
-    case 1: r = n; g = v; b = wh; break;
-    case 2: r = wh; g = v; b = n; break;
-    case 3: r = wh; g = n; b = v; break;
-    case 4: r = n; g = wh; b = v; break;
-    case 5: r = v; g = wh; b = n; break;
+	default:
+	case 6:
+	case 0: r = v; g = n; b = wh; break;
+	case 1: r = n; g = v; b = wh; break;
+	case 2: r = wh; g = v; b = n; break;
+	case 3: r = wh; g = n; b = v; break;
+	case 4: r = n; g = wh; b = v; break;
+	case 5: r = v; g = wh; b = n; break;
   }
 
   return [r * 255, g * 255, b * 255];
@@ -1093,10 +1093,10 @@ function hwb2keyword(args) {
 
 function cmyk2rgb(cmyk) {
   var c = cmyk[0] / 100,
-      m = cmyk[1] / 100,
-      y = cmyk[2] / 100,
-      k = cmyk[3] / 100,
-      r, g, b;
+	  m = cmyk[1] / 100,
+	  y = cmyk[2] / 100,
+	  k = cmyk[3] / 100,
+	  r, g, b;
 
   r = 1 - Math.min(1, c * (1 - k) + k);
   g = 1 - Math.min(1, m * (1 - k) + k);
@@ -1123,9 +1123,9 @@ function cmyk2keyword(args) {
 
 function xyz2rgb(xyz) {
   var x = xyz[0] / 100,
-      y = xyz[1] / 100,
-      z = xyz[2] / 100,
-      r, g, b;
+	  y = xyz[1] / 100,
+	  z = xyz[2] / 100,
+	  r, g, b;
 
   r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
   g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
@@ -1133,13 +1133,13 @@ function xyz2rgb(xyz) {
 
   // assume sRGB
   r = r > 0.0031308 ? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
-    : r = (r * 12.92);
+	: r = (r * 12.92);
 
   g = g > 0.0031308 ? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
-    : g = (g * 12.92);
+	: g = (g * 12.92);
 
   b = b > 0.0031308 ? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
-    : b = (b * 12.92);
+	: b = (b * 12.92);
 
   r = Math.min(Math.max(0, r), 1);
   g = Math.min(Math.max(0, g), 1);
@@ -1150,9 +1150,9 @@ function xyz2rgb(xyz) {
 
 function xyz2lab(xyz) {
   var x = xyz[0],
-      y = xyz[1],
-      z = xyz[2],
-      l, a, b;
+	  y = xyz[1],
+	  z = xyz[2],
+	  l, a, b;
 
   x /= 95.047;
   y /= 100;
@@ -1175,16 +1175,16 @@ function xyz2lch(args) {
 
 function lab2xyz(lab) {
   var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      x, y, z, y2;
+	  a = lab[1],
+	  b = lab[2],
+	  x, y, z, y2;
 
   if (l <= 8) {
-    y = (l * 100) / 903.3;
-    y2 = (7.787 * (y / 100)) + (16 / 116);
+	y = (l * 100) / 903.3;
+	y2 = (7.787 * (y / 100)) + (16 / 116);
   } else {
-    y = 100 * Math.pow((l + 16) / 116, 3);
-    y2 = Math.pow(y / 100, 1/3);
+	y = 100 * Math.pow((l + 16) / 116, 3);
+	y2 = Math.pow(y / 100, 1/3);
   }
 
   x = x / 95.047 <= 0.008856 ? x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
@@ -1196,14 +1196,14 @@ function lab2xyz(lab) {
 
 function lab2lch(lab) {
   var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      hr, h, c;
+	  a = lab[1],
+	  b = lab[2],
+	  hr, h, c;
 
   hr = Math.atan2(b, a);
   h = hr * 360 / 2 / Math.PI;
   if (h < 0) {
-    h += 360;
+	h += 360;
   }
   c = Math.sqrt(a * a + b * b);
   return [l, c, h];
@@ -1215,9 +1215,9 @@ function lab2rgb(args) {
 
 function lch2lab(lch) {
   var l = lch[0],
-      c = lch[1],
-      h = lch[2],
-      a, b, hr;
+	  c = lch[1],
+	  h = lch[2],
+	  a, b, hr;
 
   hr = h / 360 * 2 * Math.PI;
   a = c * Math.cos(hr);
@@ -1427,34 +1427,34 @@ var convert = function() {
 for (var func in conversions) {
   // export Raw versions
   convert[func + "Raw"] =  (function(func) {
-    // accept array or plain args
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      return conversions[func](arg);
-    }
+	// accept array or plain args
+	return function(arg) {
+	  if (typeof arg == "number")
+		arg = Array.prototype.slice.call(arguments);
+	  return conversions[func](arg);
+	}
   })(func);
 
   var pair = /(\w+)2(\w+)/.exec(func),
-      from = pair[1],
-      to = pair[2];
+	  from = pair[1],
+	  to = pair[2];
 
   // export rgb2hsl and ["rgb"]["hsl"]
   convert[from] = convert[from] || {};
 
-  convert[from][to] = convert[func] = (function(func) { 
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      
-      var val = conversions[func](arg);
-      if (typeof val == "string" || val === undefined)
-        return val; // keyword
+  convert[from][to] = convert[func] = (function(func) {
+	return function(arg) {
+	  if (typeof arg == "number")
+		arg = Array.prototype.slice.call(arguments);
 
-      for (var i = 0; i < val.length; i++)
-        val[i] = Math.round(val[i]);
-      return val;
-    }
+	  var val = conversions[func](arg);
+	  if (typeof val == "string" || val === undefined)
+		return val; // keyword
+
+	  for (var i = 0; i < val.length; i++)
+		val[i] = Math.round(val[i]);
+	  return val;
+	}
   })(func);
 }
 
@@ -1469,17 +1469,17 @@ var Converter = function() {
 Converter.prototype.routeSpace = function(space, args) {
    var values = args[0];
    if (values === undefined) {
-      // color.rgb()
-      return this.getValues(space);
+	  // color.rgb()
+	  return this.getValues(space);
    }
    // color.rgb(10, 10, 10)
    if (typeof values == "number") {
-      values = Array.prototype.slice.call(args);        
+	  values = Array.prototype.slice.call(args);
    }
 
    return this.setValues(space, values);
 };
-  
+
 /* Set the values for a space, invalidating cache */
 Converter.prototype.setValues = function(space, values) {
    this.space = space;
@@ -1494,18 +1494,18 @@ Converter.prototype.setValues = function(space, values) {
 Converter.prototype.getValues = function(space) {
    var vals = this.convs[space];
    if (!vals) {
-      var fspace = this.space,
-          from = this.convs[fspace];
-      vals = convert[fspace][space](from);
+	  var fspace = this.space,
+		  from = this.convs[fspace];
+	  vals = convert[fspace][space](from);
 
-      this.convs[space] = vals;
+	  this.convs[space] = vals;
    }
   return vals;
 };
 
 ["rgb", "hsl", "hsv", "cmyk", "keyword"].forEach(function(space) {
    Converter.prototype[space] = function(vals) {
-      return this.routeSpace(space, arguments);
+	  return this.routeSpace(space, arguments);
    }
 });
 
@@ -1775,7 +1775,7 @@ module.exports = function(Chart) {
 "use strict";
 
 module.exports = function(Chart) {
-	
+
 	Chart.Radar = function(context, config) {
 		config.options = Chart.helpers.configMerge({ aspectRatio: 1 }, config.options);
 		config.type = 'radar';
@@ -1978,8 +1978,8 @@ module.exports = function(Chart) {
 			var fullBarWidth = categoryWidth / datasetCount;
 
 			if (xScale.ticks.length !== me.chart.data.labels.length) {
-			    var perc = xScale.ticks.length / me.chart.data.labels.length;
-			    fullBarWidth = fullBarWidth * perc;
+				var perc = xScale.ticks.length / me.chart.data.labels.length;
+				fullBarWidth = fullBarWidth * perc;
 			}
 
 			var barWidth = fullBarWidth * xScale.options.barPercentage;
@@ -2701,7 +2701,7 @@ module.exports = function(Chart) {
 				minSize = Math.min(availableWidth / size.width, availableHeight / size.height);
 				offset = {x: (max.x + min.x) * -0.5, y: (max.y + min.y) * -0.5};
 			}
-            chart.borderWidth = me.getMaxBorderWidth(meta.data);
+			chart.borderWidth = me.getMaxBorderWidth(meta.data);
 
 			chart.outerRadius = Math.max((minSize - chart.borderWidth) / 2, 0);
 			chart.innerRadius = Math.max(cutoutPercentage ? (chart.outerRadius / 100) * (cutoutPercentage) : 1, 0);
@@ -2803,24 +2803,24 @@ module.exports = function(Chart) {
 				return 0;
 			}
 		},
-		
+
 		//gets the max border or hover width to properly scale pie charts
-        getMaxBorderWidth: function (elements) {
-            var max = 0,
+		getMaxBorderWidth: function (elements) {
+			var max = 0,
 				index = this.index,
 				length = elements.length,
 				borderWidth,
 				hoverWidth;
 
-            for (var i = 0; i < length; i++) {
-               	borderWidth = elements[i]._model ? elements[i]._model.borderWidth : 0;
-                hoverWidth = elements[i]._chart ? elements[i]._chart.config.data.datasets[index].hoverBorderWidth : 0;
-				
-                max = borderWidth > max ? borderWidth : max;
-                max = hoverWidth > max ? hoverWidth : max;
-            }
-            return max;
-        }
+			for (var i = 0; i < length; i++) {
+				   borderWidth = elements[i]._model ? elements[i]._model.borderWidth : 0;
+				hoverWidth = elements[i]._chart ? elements[i]._chart.config.data.datasets[index].hoverBorderWidth : 0;
+
+				max = borderWidth > max ? borderWidth : max;
+				max = hoverWidth > max ? hoverWidth : max;
+			}
+			return max;
+		}
 	});
 };
 
@@ -4285,7 +4285,7 @@ module.exports = function(Chart) {
 			}, me);
 
 			return elementsArray;
-		},		
+		},
 
 		getElementsAtEventForMode: function(e, mode) {
 			var me = this;
@@ -4296,8 +4296,8 @@ module.exports = function(Chart) {
 				return me.getElementsAtEvent(e);
 			case 'dataset':
 				return me.getDatasetAtEvent(e);
-            case 'x-axis':
-                return me.getElementsAtXAxis(e);
+			case 'x-axis':
+				return me.getElementsAtXAxis(e);
 			default:
 				return e;
 			}
@@ -4415,7 +4415,7 @@ module.exports = function(Chart) {
 				break;
 			case 'label':
 			case 'dataset':
-            case 'x-axis':
+			case 'x-axis':
 				// elements = elements;
 				break;
 			default:
@@ -4669,9 +4669,9 @@ module.exports = function(Chart) {
 			model.borderColor = custom.hoverBorderColor ? custom.hoverBorderColor : valueOrDefault(dataset.hoverBorderColor, index, getHoverColor(model.borderColor));
 			model.borderWidth = custom.hoverBorderWidth ? custom.hoverBorderWidth : valueOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
 		}
-		
-    });
-	
+
+	});
+
 
 	Chart.DatasetController.extend = helpers.inherits;
 };
@@ -4685,96 +4685,96 @@ module.exports = function(Chart) {
   Chart.elements = {};
 
   Chart.Element = function(configuration) {
-    helpers.extend(this, configuration);
-    this.initialize.apply(this, arguments);
+	helpers.extend(this, configuration);
+	this.initialize.apply(this, arguments);
   };
 
   helpers.extend(Chart.Element.prototype, {
 
-    initialize: function() {
-      this.hidden = false;
-    },
+	initialize: function() {
+	  this.hidden = false;
+	},
 
-    pivot: function() {
-      var me = this;
-      if (!me._view) {
-        me._view = helpers.clone(me._model);
-      }
-      me._start = helpers.clone(me._view);
-      return me;
-    },
+	pivot: function() {
+	  var me = this;
+	  if (!me._view) {
+		me._view = helpers.clone(me._model);
+	  }
+	  me._start = helpers.clone(me._view);
+	  return me;
+	},
 
-    transition: function(ease) {
-      var me = this;
-      
-      if (!me._view) {
-        me._view = helpers.clone(me._model);
-      }
+	transition: function(ease) {
+	  var me = this;
 
-      // No animation -> No Transition
-      if (ease === 1) {
-        me._view = me._model;
-        me._start = null;
-        return me;
-      }
+	  if (!me._view) {
+		me._view = helpers.clone(me._model);
+	  }
 
-      if (!me._start) {
-        me.pivot();
-      }
+	  // No animation -> No Transition
+	  if (ease === 1) {
+		me._view = me._model;
+		me._start = null;
+		return me;
+	  }
 
-      helpers.each(me._model, function(value, key) {
+	  if (!me._start) {
+		me.pivot();
+	  }
 
-        if (key[0] === '_') {
-          // Only non-underscored properties
-        }
+	  helpers.each(me._model, function(value, key) {
 
-        // Init if doesn't exist
-        else if (!me._view.hasOwnProperty(key)) {
-          if (typeof value === 'number' && !isNaN(me._view[key])) {
-            me._view[key] = value * ease;
-          } else {
-            me._view[key] = value;
-          }
-        }
+		if (key[0] === '_') {
+		  // Only non-underscored properties
+		}
 
-        // No unnecessary computations
-        else if (value === me._view[key]) {
-          // It's the same! Woohoo!
-        }
+		// Init if doesn't exist
+		else if (!me._view.hasOwnProperty(key)) {
+		  if (typeof value === 'number' && !isNaN(me._view[key])) {
+			me._view[key] = value * ease;
+		  } else {
+			me._view[key] = value;
+		  }
+		}
 
-        // Color transitions if possible
-        else if (typeof value === 'string') {
-          try {
-            var color = helpers.color(me._model[key]).mix(helpers.color(me._start[key]), ease);
-            me._view[key] = color.rgbString();
-          } catch (err) {
-            me._view[key] = value;
-          }
-        }
-        // Number transitions
-        else if (typeof value === 'number') {
-          var startVal = me._start[key] !== undefined && isNaN(me._start[key]) === false ? me._start[key] : 0;
-          me._view[key] = ((me._model[key] - startVal) * ease) + startVal;
-        }
-        // Everything else
-        else {
-          me._view[key] = value;
-        }
-      }, me);
+		// No unnecessary computations
+		else if (value === me._view[key]) {
+		  // It's the same! Woohoo!
+		}
 
-      return me;
-    },
+		// Color transitions if possible
+		else if (typeof value === 'string') {
+		  try {
+			var color = helpers.color(me._model[key]).mix(helpers.color(me._start[key]), ease);
+			me._view[key] = color.rgbString();
+		  } catch (err) {
+			me._view[key] = value;
+		  }
+		}
+		// Number transitions
+		else if (typeof value === 'number') {
+		  var startVal = me._start[key] !== undefined && isNaN(me._start[key]) === false ? me._start[key] : 0;
+		  me._view[key] = ((me._model[key] - startVal) * ease) + startVal;
+		}
+		// Everything else
+		else {
+		  me._view[key] = value;
+		}
+	  }, me);
 
-    tooltipPosition: function() {
-      return {
-        x: this._model.x,
-        y: this._model.y
-      };
-    },
+	  return me;
+	},
 
-    hasValue: function() {
-      return helpers.isNumber(this._model.x) && helpers.isNumber(this._model.y);
-    }
+	tooltipPosition: function() {
+	  return {
+		x: this._model.x,
+		y: this._model.y
+	  };
+	},
+
+	hasValue: function() {
+	  return helpers.isNumber(this._model.x) && helpers.isNumber(this._model.y);
+	}
   });
 
   Chart.Element.extend = helpers.inherits;
@@ -5811,7 +5811,7 @@ module.exports = function() {
 	var Chart = function(context, config) {
 		var me = this;
 		var helpers = Chart.helpers;
-		me.config = config || { 
+		me.config = config || {
 			data: {
 				datasets: []
 			}
@@ -8570,92 +8570,92 @@ module.exports = function(Chart) {
 module.exports = function(Chart) {
 
   var helpers = Chart.helpers,
-    globalOpts = Chart.defaults.global;
+	globalOpts = Chart.defaults.global;
 
   globalOpts.elements.arc = {
-    backgroundColor: globalOpts.defaultColor,
-    borderColor: "#fff",
-    borderWidth: 2
+	backgroundColor: globalOpts.defaultColor,
+	borderColor: "#fff",
+	borderWidth: 2
   };
 
   Chart.elements.Arc = Chart.Element.extend({
-    inLabelRange: function(mouseX) {
-      var vm = this._view;
+	inLabelRange: function(mouseX) {
+	  var vm = this._view;
 
-      if (vm) {
-        return (Math.pow(mouseX - vm.x, 2) < Math.pow(vm.radius + vm.hoverRadius, 2));
-      } else {
-        return false;
-      }
-    },
-    inRange: function(chartX, chartY) {
-      var vm = this._view;
+	  if (vm) {
+		return (Math.pow(mouseX - vm.x, 2) < Math.pow(vm.radius + vm.hoverRadius, 2));
+	  } else {
+		return false;
+	  }
+	},
+	inRange: function(chartX, chartY) {
+	  var vm = this._view;
 
-      if (vm) {
-        var pointRelativePosition = helpers.getAngleFromPoint(vm, {
-            x: chartX,
-            y: chartY
-          }),
-          angle = pointRelativePosition.angle,
-          distance = pointRelativePosition.distance;
+	  if (vm) {
+		var pointRelativePosition = helpers.getAngleFromPoint(vm, {
+			x: chartX,
+			y: chartY
+		  }),
+		  angle = pointRelativePosition.angle,
+		  distance = pointRelativePosition.distance;
 
-        //Sanitise angle range
-        var startAngle = vm.startAngle;
-        var endAngle = vm.endAngle;
-        while (endAngle < startAngle) {
-          endAngle += 2.0 * Math.PI;
-        }
-        while (angle > endAngle) {
-          angle -= 2.0 * Math.PI;
-        }
-        while (angle < startAngle) {
-          angle += 2.0 * Math.PI;
-        }
+		//Sanitise angle range
+		var startAngle = vm.startAngle;
+		var endAngle = vm.endAngle;
+		while (endAngle < startAngle) {
+		  endAngle += 2.0 * Math.PI;
+		}
+		while (angle > endAngle) {
+		  angle -= 2.0 * Math.PI;
+		}
+		while (angle < startAngle) {
+		  angle += 2.0 * Math.PI;
+		}
 
-        //Check if within the range of the open/close angle
-        var betweenAngles = (angle >= startAngle && angle <= endAngle),
-          withinRadius = (distance >= vm.innerRadius && distance <= vm.outerRadius);
+		//Check if within the range of the open/close angle
+		var betweenAngles = (angle >= startAngle && angle <= endAngle),
+		  withinRadius = (distance >= vm.innerRadius && distance <= vm.outerRadius);
 
-        return (betweenAngles && withinRadius);
-      } else {
-        return false;
-      }
-    },
-    tooltipPosition: function() {
-      var vm = this._view;
+		return (betweenAngles && withinRadius);
+	  } else {
+		return false;
+	  }
+	},
+	tooltipPosition: function() {
+	  var vm = this._view;
 
-      var centreAngle = vm.startAngle + ((vm.endAngle - vm.startAngle) / 2),
-        rangeFromCentre = (vm.outerRadius - vm.innerRadius) / 2 + vm.innerRadius;
-      return {
-        x: vm.x + (Math.cos(centreAngle) * rangeFromCentre),
-        y: vm.y + (Math.sin(centreAngle) * rangeFromCentre)
-      };
-    },
-    draw: function() {
+	  var centreAngle = vm.startAngle + ((vm.endAngle - vm.startAngle) / 2),
+		rangeFromCentre = (vm.outerRadius - vm.innerRadius) / 2 + vm.innerRadius;
+	  return {
+		x: vm.x + (Math.cos(centreAngle) * rangeFromCentre),
+		y: vm.y + (Math.sin(centreAngle) * rangeFromCentre)
+	  };
+	},
+	draw: function() {
 
-      var ctx = this._chart.ctx,
-        vm = this._view,
-        sA = vm.startAngle,
-        eA = vm.endAngle;
+	  var ctx = this._chart.ctx,
+		vm = this._view,
+		sA = vm.startAngle,
+		eA = vm.endAngle;
 
-      ctx.beginPath();
+	  ctx.beginPath();
 
-      ctx.arc(vm.x, vm.y, vm.outerRadius, sA, eA);
-      ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
+	  ctx.arc(vm.x, vm.y, vm.outerRadius, sA, eA);
+	  ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
 
-      ctx.closePath();
-      ctx.strokeStyle = vm.borderColor;
-      ctx.lineWidth = vm.borderWidth;
+	  ctx.closePath();
+	  ctx.strokeStyle = vm.borderColor;
+	  ctx.lineWidth = vm.borderWidth;
 
-      ctx.fillStyle = vm.backgroundColor;
+	  ctx.fillStyle = vm.backgroundColor;
 
-      ctx.fill();
-      ctx.lineJoin = 'bevel';
+	  ctx.fill();
+	  ctx.lineJoin = 'bevel';
 
-      if (vm.borderWidth) {
-        ctx.stroke();
-      }
-    }
+	  if (vm.borderWidth) {
+		ctx.stroke();
+	  }
+	}
   });
 };
 
@@ -8696,7 +8696,7 @@ module.exports = function(Chart) {
 				var vm = point._view;
 				if (point._view.steppedLine === true) {
 					ctx.lineTo(point._view.x, previousPoint._view.y);
-					ctx.lineTo(point._view.x, point._view.y);				
+					ctx.lineTo(point._view.x, point._view.y);
 				} else if (point._view.tension === 0) {
 					ctx.lineTo(vm.x, vm.y);
 				} else {
@@ -8756,7 +8756,7 @@ module.exports = function(Chart) {
 							}
 						} else {
 							if (lastDrawnIndex !== (index - 1)) {
-								// There was a gap and this is the first point after the gap. If we've never drawn a point, this is a special case. 
+								// There was a gap and this is the first point after the gap. If we've never drawn a point, this is a special case.
 								// If the first data point is NaN, then there is no real gap to skip
 								if (spanGaps && lastDrawnIndex !== -1) {
 									// We are spanning the gap, so simple draw a line to this point
